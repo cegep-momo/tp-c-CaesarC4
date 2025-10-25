@@ -2,7 +2,13 @@ cmake_minimum_required(VERSION 3.21)
 project(bibliotheque)
 
 file(GLOB SOURCES "*.cpp")
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES}
+    main.cpp
+    library.cpp
+    filemanager.cpp
+    user.cpp
+    book.cpp
+) 
 
 # Specifie qu'on veut la version C++17 du langage
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -13,3 +19,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 # flag pour tous les warnings possible
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+
+# Définit la macro DATA_DIR pour indiquer le chemin vers le dossier data
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    DATA_DIR="${CMAKE_SOURCE_DIR}/data"
+)
