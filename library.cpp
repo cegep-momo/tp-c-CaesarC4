@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-
+#include "activitylog.h"
 #include "library.h"
 
 using namespace std;
@@ -11,6 +11,8 @@ Library::Library() {}
 // Add book to library
 void Library::addBook(const Book& book) {
     books.push_back(make_unique<Book>(book));
+    logAddBook(book.getTitle(), book.getAuthor(), book.getISBN());
+    
 }
 
 // Remove book from library
@@ -21,7 +23,9 @@ bool Library::removeBook(const string& isbn) {
         });
     
     if (it != books.end()) {
+        std::string removedIsbn = (*it)->getISBN();  // garder avant erase
         books.erase(it);
+        logDeleteBook(removedIsbn);
     return true;
 }
     return false;
@@ -94,6 +98,7 @@ vector<Book*> Library::getAllBooks() {
 // Add user to library
 void Library::addUser(const User& user) {
     users.push_back(make_unique<User>(user));
+    logAddUser(user.getUserId(), user.getName());
 }
 
 // Find user by ID
@@ -123,6 +128,7 @@ bool Library::checkOutBook(const string& isbn, const string& userId) {
     if (book && user && book->getAvailability()) {
         book->checkOut(user->getName());
         user->borrowBook(isbn);
+        logBorrow(isbn, user->getUserId(), user->getName());
         return true;
     }
     return false;
@@ -141,6 +147,7 @@ bool Library::returnBook(const string& isbn) {
             }
         }
         book->returnBook();
+        logReturn(isbn);
         return true;
     }
     return false;

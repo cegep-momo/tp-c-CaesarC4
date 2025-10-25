@@ -8,7 +8,8 @@ add_executable(${PROJECT_NAME} ${SOURCES}
     filemanager.cpp
     user.cpp
     book.cpp
-) 
+    activitylog.cpp
+)
 
 # Specifie qu'on veut la version C++17 du langage
 set_target_properties(${PROJECT_NAME} PROPERTIES
