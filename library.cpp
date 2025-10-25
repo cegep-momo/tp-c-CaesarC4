@@ -22,8 +22,8 @@ bool Library::removeBook(const string& isbn) {
     
     if (it != books.end()) {
         books.erase(it);
-        return true;
-    }
+    return true;
+}
     return false;
 }
 
@@ -131,8 +131,8 @@ bool Library::checkOutBook(const string& isbn, const string& userId) {
 // Return book
 bool Library::returnBook(const string& isbn) {
     Book* book = findBookByISBN(isbn);
-    
-    if (book && !book->getAvailability()) {
+
+        if (book && !book->getAvailability()) {
         // Find the user who borrowed this book
         for (auto& user : users) {
             if (user->hasBorrowedBook(isbn)) {
@@ -152,28 +152,49 @@ void Library::displayAllBooks() {
         cout << "Aucun livre dans la bibliothèque.\n";
         return;
     }
-    
-    cout << "\n=== TOUS LES LIVRES ===\n";
-    for (size_t i = 0; i < books.size(); ++i) {
+
+    // Construire une vue triable de pointeurs
+    std::vector<const Book*> v;
+    v.reserve(books.size());
+    for (const auto& uptr : books) v.push_back(uptr.get());
+
+    // Tri: titre asc, puis auteur asc
+    std::sort(v.begin(), v.end(), [](const Book* a, const Book* b){
+        if (a->getTitle() == b->getTitle()) return a->getAuthor() < b->getAuthor();
+        return a->getTitle() < b->getTitle();
+    });
+
+    cout << "\n=== TOUS LES LIVRES (triés par titre, puis auteur) ===\n";
+    for (size_t i = 0; i < v.size(); ++i) {
         cout << "\nLivre " << (i + 1) << " :\n";
-        cout << books[i]->toString() << "\n";
+        cout << v[i]->toString() << "\n";
         cout << "-------------------------\n";
     }
 }
 
 // Display available books
 void Library::displayAvailableBooks() {
-    auto available = getAvailableBooks();
-    
-    if (available.empty()) {
+    // Collecter les disponibles
+    std::vector<const Book*> v;
+    v.reserve(books.size());
+    for (const auto& uptr : books) {
+        if (uptr->getAvailability()) v.push_back(uptr.get());
+    }
+
+    if (v.empty()) {
         cout << "Aucun livre disponible pour emprunt.\n";
         return;
     }
-    
-    cout << "\n=== LIVRES DISPONIBLES ===\n";
-    for (size_t i = 0; i < available.size(); ++i) {
+    // Tri: titre asc, puis auteur asc
+    std::sort(v.begin(), v.end(), [](const Book* a, const Book* b){
+        if (a->getTitle() == b->getTitle()) return a->getAuthor() < b->getAuthor();
+        return a->getTitle() < b->getTitle();
+    });
+
+    cout << "\n=== LIVRES DISPONIBLES (triés par titre, puis auteur) ===\n";
+    for (size_t i = 0; i < v.size(); ++i) {
         cout << "\nLivre " << (i + 1) << " :\n";
-        cout << available[i]->toString() << "\n";
+        cout << v[i]->toString() << "\n";
         cout << "---------------------------\n";
     }
 }
