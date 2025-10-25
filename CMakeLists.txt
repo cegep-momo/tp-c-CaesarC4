@@ -24,3 +24,5 @@ target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     DATA_DIR="${CMAKE_SOURCE_DIR}/data"
 )
+
+#Test 
