@@ -5,6 +5,14 @@
 #include "library.h"
 #include "filemanager.h"
 
+static bool confirm(const std::string& msg) {
+    std::cout << msg << " (o/n) : ";
+    std::string s; 
+    std::getline(std::cin, s);
+    return !s.empty() && (s[0]=='o' || s[0]=='O' || s[0]=='y' || s[0]=='Y');
+}
+
+
 using namespace std;
 
 void clearScreen() {
@@ -85,12 +93,18 @@ int main() {
             }
             
             case 2: { // Remove Book
-                string isbn = getInput("Entrez l'ISBN du livre à supprimer : ");
-                
-                if (library.removeBook(isbn)) {
-                    cout << "Livre supprimé avec succès !\n";
+                std::string isbn;
+                std::cout << "Entrez l'ISBN du livre à supprimer : ";
+                std::getline(std::cin, isbn);
+
+                if (confirm("Êtes-vous sûr de vouloir supprimer ce livre ?")) {
+                    if (library.removeBook(isbn)) {
+                        std::cout << "Livre supprimé.\n";
+                    } else {
+                        std::cout << "Aucun livre trouvé avec cet identifiant ou suppression impossible (peut-être emprunté).\n";
+                    }
                 } else {
-                    cout << "Livre non trouvé.\n";
+                    std::cout << "Suppression annulée.\n";
                 }
                 pauseForInput();
                 break;
