@@ -26,4 +26,5 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     DATA_DIR="${CMAKE_SOURCE_DIR}/data"
 )
 
-#Test 
+#Test
+#Fin de projet
