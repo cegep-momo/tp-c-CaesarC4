@@ -17,3 +17,6 @@ Pour ca il suffit de les copiers dans le repertoire `build` avec l'application `
 
 Question 1 : 
 La fonctionnalité exploite std::filesystem pour gérer les chemins et fichiers de manière portable et sécurisée. En utilisant std::filesystem::path, cela cree des chemin fiable , on cree automatiquement le dossier data/ avec create_directories() et on ajoute dans data/ en mode (std::ios::app). Cela reduit les erreurs des chemins, et facilite la persistance des taches.
+
+Question 2 : 
+On peut utiliser le Backend Node.js (Express) + MongoDB pour le document Book et User et Atlas Search pour les requêtes. On peut garder le même modèle de C++ mais on l'envoie via gRPC (un framework qui peut marcher sur n'importe quel environnement). Pour MongoDB, il gère la gestion des livres et d'utilisateurs, mais en base de donnée.
